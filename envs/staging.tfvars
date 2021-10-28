@@ -1,0 +1,10 @@
+env = "staging"
+region = "us-west-2"
+vpc_name = "project_vpc"
+vpc_subnet = "172.29.96.0/19"
+private_subnets = ["172.29.96.0/21","172.29.104.0/21"]
+public_subnets = ["172.29.112.0/21","172.29.120.0/21"]
+enable_natgateway = true
+enable_vpngateway = false
+count_eip_nat = 1
+owner_tag = "Project DevOps Team"
