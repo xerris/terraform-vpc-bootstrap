@@ -1,7 +1,7 @@
 env = "staging"
-region = "us-west-2"
+region = "ca-central-1"
 vpc_name = "project_vpc"
-vpc_subnet = "172.29.96.0/19"
+vpc_cidr = "172.29.96.0/19"
 private_subnets = ["172.29.96.0/21","172.29.104.0/21"]
 public_subnets = ["172.29.112.0/21","172.29.120.0/21"]
 enable_natgateway = true
