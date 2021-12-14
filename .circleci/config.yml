@@ -1,0 +1,169 @@
+version: 2.1
+executors:
+  terraform:
+    docker:
+      - image: circleci/node:12.14.1
+orbs:
+  aws-cli: circleci/aws-cli@0.1.18
+  jq: circleci/jq@1.9.1
+
+anchors:
+  configure-aws-access: &configure-aws-access
+    run:
+      name: Configure AWS access
+      command: |
+        mkdir -p ~/.aws
+        file=~/.aws/credentials
+        echo "[default]" > $file
+        echo "aws_access_key_id = $AWS_ACCESS_KEY_ID_MASTER" >> $file
+        echo "aws_secret_access_key = $AWS_SECRET_ACCESS_KEY_MASTER" >> $file
+
+  deploy-infra: &deploy-infra
+    run:
+      name: Deploy terraform platform infra
+      command: |
+        PATH="/home/circleci/.local/bin/:$PATH"
+        source $HOME/.profile
+        bash ./terraform_exec.sh 1
+
+  destroy-infra: &destroy-infra
+    run:
+      name: Destroy VPC
+      command: |
+        PATH="/home/circleci/.local/bin/:$PATH"
+        source $HOME/.profile
+        bash ./terraform_exec.sh 2
+
+  install-dependencies: &install-dependencies
+    run:
+      name: Install terraform
+      command: |
+        PATH="/home/circleci/.local/bin/:$PATH"
+        bash ./install_terraform.sh
+
+
+jobs:
+  deployInfra:
+    executor: terraform
+    environment:
+      BASH_ENV: /home/circleci/.bashrc
+    steps:
+      - checkout
+      - *install-dependencies
+      - *configure-aws-access
+      - *deploy-infra
+
+  destroyInfra:
+    executor: terraform
+    steps:
+      - checkout
+      - *install-dependencies
+      - *configure-aws-access
+      - *destroy-infra
+
+workflows:
+  version: 2
+  TriggerdevDeploy:
+    triggers:
+      - schedule:
+          cron: "30 13 * * *"
+          filters:
+            branches:
+              only:
+                - dev
+    jobs:
+      - deployInfra:
+          context: xerris-dev-2
+
+  TriggerdevDestroy:
+    triggers:
+      - schedule:
+          cron: "30 2 * * *"
+          filters:
+            branches:
+              only:
+                - dev
+    jobs:
+      - destroyInfra:
+          context: xerris-dev-2
+
+  TriggerStageDeploy:
+    triggers:
+      - schedule:
+          cron: "30 13 * * *"
+          filters:
+            branches:
+              only:
+                - main
+    jobs:
+      - deployInfra:
+          context: xerris-staging-2
+
+  TriggerStageDestroy:
+    triggers:
+      - schedule:
+          cron: "30 2 * * *"
+          filters:
+            branches:
+              only:
+                - main
+    jobs:
+      - destroyInfra:
+          context: xerris-staging-2
+
+  devDeploy:
+    jobs:
+      - deployInfra:
+          context: xerris-dev-2
+          filters:
+            branches:
+              only:
+                - dev
+                - /^eks\-.*/
+                - /^XDP\-.*/
+  devDestroy:
+    jobs:
+      - destroyInfra:
+          context: xerris-dev-2
+          filters:
+            branches:
+              only:
+                - dev-destroy
+
+  stageDeploy:
+    jobs:
+      - deployInfra:
+          context: xerris-staging-2
+          filters:
+            branches:
+              only:
+                - main
+  stageDestroy:
+    jobs:
+      - destroyInfra:
+          context: xerris-staging-2
+          filters:
+            branches:
+              only:
+                - main-destroy
+
+  prodDeploy:
+    jobs:
+      - approve-deploy:
+          type: approval
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only:
+                - /^v(\d+\.)?(\d+\.)?(\*|\d+)$/
+      - deployInfra:
+          context: xerris-prod-2
+          filters:
+            tags:
+              only:
+                - /^v(\d+\.)?(\d+\.)?(\*|\d+)$/
+            branches:
+              ignore: /.*/
+          requires:
+            - approve-deploy

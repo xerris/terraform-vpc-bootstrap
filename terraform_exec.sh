@@ -7,15 +7,15 @@ echo "###############################"
 echo "## Starting Terraform script ##"
 echo "###############################"
 
-ENV="${ENV:-staging}"
-AWS_REGION="${AWS_REGION:-us-west-2}"
+ENV="${ENV:-dev}"
+AWS_REGION="${AWS_REGION:-ca-central-1}"
 echo "Configuring AWS Profiles"
 export AWS_PROFILE=default
 
-aws configure set role_arn "arn:aws:iam::${MASTER_ACCOUNT_ID}:role/project-deploy-role" --profile ${ENV}-deployment-profile
-aws configure set source_profile burnco --profile ${ENV}-deployment-profile
-aws configure set role_session_name test-session2 --profile ${ENV}-deployment-profile
-export AWS_PROFILE=${ENV}-deployment-profile
+#aws configure set role_arn "arn:aws:iam::${MASTER_ACCOUNT_ID}:role/project-deploy-role" --profile ${ENV}-deployment-profile
+#aws configure set source_profile burnco --profile ${ENV}-deployment-profile
+#aws configure set role_session_name test-session2 --profile ${ENV}-deployment-profile
+#export AWS_PROFILE=${ENV}-deployment-profile
 
 APPLY=${1:-0} #If set terraform will force apply changes
 #commit_hash=`git rev-parse --short HEAD`
