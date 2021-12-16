@@ -1,53 +1,60 @@
 # terraform-vpc-bootstrap
 This bootstrap  will show us for a Multi Enviroment(Dev,Stage,Prod) project How to create Default  VPC, Subnets(Pivates and Public), NatGateway and VPN Gateway configuration  in AWS.
 
-## Prerequisites 
-Terraform version 0.15.1
-The  .terraform-version or version.tf works with tfenv . It will install if needed and switch to the Terrraform version specified.
-# version.tf 
-```
-terraform {
-  required_version = ">= 0.15"
-}
-```
-# .terraform-version
-```
-terraform {
-  required_version = ">= 0.15"
-}
-```
+## Blueprint
+![Blueprint](vpc.png "blueprint")
+## Pre-requisites
+* [tfenv](https://github.com/tfutils/tfenv) utility
+* Terraform version 0.15.1
+The  `.terraform-version` and `version.tf` files  works with tfenv utility. It will install if needed and switch to the Terrraform version specified by `.terraform-version` and `version.tf` will validate that the correct version is in use.
+* version.tf
+    ```
+    terraform {
+      required_version = ">= 0.15"
+    }
+    ```
+* .terraform-version
+    ```
+    terraform {
+      required_version = ">= 0.15"
+    }
+    ```
 * Deployment user with programatic access created at the Root account with `AWSAdministratorAccess`.
 * AssumeRole policy created at Root account and assigned to the Deployment User.
-```
-Assume Role Policy applied on Deployment User
-{
-    "Version": "2012-10-17",
-    "Statement": {
-        "Effect": "Allow",
-        "Action": "sts:AssumeRole",
-        "Resource": "*"
-    }
-}
-```
-* Deployment Role arn:aws:iam::${MASTER_ACCOUNT_ID}:role/project-deploy-role with `AdministratorAccess` and a Trust Relationship with the Deployment User created at Root account, This  Deployment role to be created  Per Enviroment(Dev,Stage,Prod), Deployment Role Will be use by terraform_exec.sh Script. 
-```
-Trust Relationship
-{
-  "Version": "2012-10-17",
-  "Statement": [
+    ```
+    Assume Role Policy applied on Deployment User
     {
-      "Effect": "Allow",
-      "Principal": {
-        "AWS": "arn:aws:iam::XXXXXXXXX:user/deployment-user"
-      },
-      "Action": "sts:AssumeRole",
-      "Condition": {}
+        "Version": "2012-10-17",
+        "Statement": {
+            "Effect": "Allow",
+            "Action": "sts:AssumeRole",
+            "Resource": "*"
+        }
     }
-  ]
-}
-```
- 
- 
+    ```
+* Deployment Role `arn:aws:iam::${MASTER_ACCOUNT_ID}:role/project-deploy-role` with `AdministratorAccess` and a Trust Relationship with the Deployment User created at Root account, This  Deployment role to be created  Per Enviroment(Dev,Stage,Prod), Deployment Role Will be use by terraform_exec.sh Script.
+    ```
+    Trust Relationship
+    {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Effect": "Allow",
+          "Principal": {
+            "AWS": "arn:aws:iam::XXXXXXXXX:user/deployment-user"
+          },
+          "Action": "sts:AssumeRole",
+          "Condition": {}
+        }
+      ]
+    }
+    ```
+
+##NOTE
+
+  **The Assume role and Deployment role are needed just for a multiaccount setup.**
+
+
 ## Environment Variables
 
 Environment variables needed to execute this deployment.
@@ -59,7 +66,7 @@ Environment variables needed to execute this deployment.
 |AWS_REGION | ca-central-1| n/a |
 |ENV | \<env\>| n/a |
 
-## Backend Requirements 
+## Backend Requirements
 * Create Backend Bucket
 * [Create Backend Dynamo Table](https://www.terraform.io/docs/language/settings/backends/s3.html#dynamodb-state-locking)
 
