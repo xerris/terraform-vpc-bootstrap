@@ -1,5 +1,5 @@
 # terraform-vpc-bootstrap
-This bootstrap  will show us for a Multi Enviroment(Dev,Stage,Prod) project How to create Default  VPC, Subnets(Pivates and Public), NatGateway and VPN Gateway configuration  in AWS.
+This bootstrap  will show us how to create in AWS a VPC, Subnets(Pivates and Public) and NatGateway for a Multi Enviroment(Dev,Stage,Prod) project.
 
 ## Blueprint
 ![Blueprint](vpc.png "blueprint")
@@ -15,9 +15,7 @@ The  `.terraform-version` and `version.tf` files  works with tfenv utility. It w
     ```
 * .terraform-version
     ```
-    terraform {
-      required_version = ">= 0.15"
-    }
+    0.15.5
     ```
 * Deployment user with programatic access created at the Root account with `AWSAdministratorAccess`.
 * AssumeRole policy created at Root account and assigned to the Deployment User.
@@ -51,9 +49,9 @@ The  `.terraform-version` and `version.tf` files  works with tfenv utility. It w
     ```
 
 ##NOTE
-
-  **The Assume role and Deployment role are needed just for a multiaccount setup.**
-
+```diff
+- The Assume role and Deployment role are needed just for a multiaccount setup using Control Tower.
+```
 
 ## Environment Variables
 
