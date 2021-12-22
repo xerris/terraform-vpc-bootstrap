@@ -1,12 +1,12 @@
 # terraform-vpc-bootstrap
-This bootstrap  will show us how to create in AWS a VPC, Subnets(Pivates and Public) and NatGateway for a Multi Enviroment(Dev,Stage,Prod) project.
+This bootstrap  will show us how to create in AWS a VPC, Subnets(Private and Public) and NatGateway for a Multi Environment(Dev,Stage,Prod) project.
 
 ## Blueprint
 ![Blueprint](vpc.png "blueprint")
 ## Pre-requisites
 * [tfenv](https://github.com/tfutils/tfenv) utility
 * Terraform version 0.15.1
-The  `.terraform-version` and `version.tf` files  works with tfenv utility. It will install if needed and switch to the Terrraform version specified by `.terraform-version` and `version.tf` will validate that the correct version is in use.
+The  `.terraform-version` and `version.tf` files  works with tfenv utility. It will install if needed and switch to the Terraform version specified by `.terraform-version` and `version.tf` will validate that the correct version is in use.
 * version.tf
     ```
     terraform {
@@ -30,7 +30,7 @@ The  `.terraform-version` and `version.tf` files  works with tfenv utility. It w
         }
     }
     ```
-* Deployment Role `arn:aws:iam::${MASTER_ACCOUNT_ID}:role/project-deploy-role` with `AdministratorAccess` and a Trust Relationship with the Deployment User created at Root account, This  Deployment role to be created  Per Enviroment(Dev,Stage,Prod), Deployment Role Will be use by terraform_exec.sh Script.
+* Deployment Role `arn:aws:iam::${MASTER_ACCOUNT_ID}:role/project-deploy-role` with `AdministratorAccess` and a Trust Relationship with the Deployment User created at Root account, This  Deployment role to be created  Per Environment(Dev,Stage,Prod), Deployment Role Will be use by terraform_exec.sh Script.
     ```
     Trust Relationship
     {
