@@ -26,7 +26,7 @@ APPLY=${1:-0} #If set terraform will force apply changes
 
 terraform init \
 -upgrade \
--backend-config="bucket=project-terraform-infra-state-${ENV}" \
+-backend-config="bucket=opentext-poc-terraform-infra-state" \
 -backend-config="key=${ENV}/project-infra.tfstate" \
 -backend-config="region=${AWS_REGION}"
 
