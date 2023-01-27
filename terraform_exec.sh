@@ -8,7 +8,7 @@ echo "## Starting Terraform script ##"
 echo "###############################"
 
 ENV="${ENV:-dev}"
-AWS_REGION="${AWS_REGION:-ca-central-1}"
+AWS_REGION="${AWS_REGION:-us-east-1}"
 echo "Configuring AWS Profiles"
 export AWS_PROFILE=default
 
