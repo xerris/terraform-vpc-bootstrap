@@ -1,5 +1,5 @@
 env = "dev"
-region = "ca-central-1"
+region = "us-east-1"
 vpc_name = "project_vpc"
 vpc_cidr = "172.29.32.0/19"
 private_subnets = ["172.29.32.0/21","172.29.40.0/21"]

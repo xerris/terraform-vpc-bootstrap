@@ -10,7 +10,7 @@ echo "###############################"
 ENV="${ENV:-dev}"
 AWS_REGION="${AWS_REGION:-us-east-1}"
 echo "Configuring AWS Profiles"
-export AWS_PROFILE=default
+#export AWS_PROFILE=default
 
 #aws configure set role_arn "arn:aws:iam::${MASTER_ACCOUNT_ID}:role/project-deploy-role" --profile ${ENV}-deployment-profile
 #aws configure set source_profile burnco --profile ${ENV}-deployment-profile
