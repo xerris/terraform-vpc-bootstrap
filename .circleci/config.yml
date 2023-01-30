@@ -17,6 +17,7 @@ anchors:
         echo "[default]" > $file
         echo "aws_access_key_id = $AWS_ACCESS_KEY_ID" >> $file
         echo "aws_secret_access_key = $AWS_SECRET_ACCESS_KEY" >> $file
+        echo "aws_region = us-east-1" >> $file
 
   deploy-infra: &deploy-infra
     run:
@@ -24,6 +25,9 @@ anchors:
       command: |
         PATH="/home/circleci/.local/bin/:$PATH"
         source $HOME/.profile
+        if [[ "$CIRCLE_BRANCH" == "main" ]]; then
+          export ENV=staging
+        fi
         bash ./terraform_exec.sh 1
 
   destroy-infra: &destroy-infra
@@ -32,6 +36,9 @@ anchors:
       command: |
         PATH="/home/circleci/.local/bin/:$PATH"
         source $HOME/.profile
+        if [[ "$CIRCLE_BRANCH" == "main" ]]; then
+          export ENV=staging
+        fi
         bash ./terraform_exec.sh 2
 
   install-dependencies: &install-dependencies
