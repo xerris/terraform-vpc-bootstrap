@@ -15,8 +15,8 @@ anchors:
         mkdir -p ~/.aws
         file=~/.aws/credentials
         echo "[default]" > $file
-        echo "aws_access_key_id = $AWS_ACCESS_KEY_ID_MASTER" >> $file
-        echo "aws_secret_access_key = $AWS_SECRET_ACCESS_KEY_MASTER" >> $file
+        echo "aws_access_key_id = $AWS_ACCESS_KEY_ID" >> $file
+        echo "aws_secret_access_key = $AWS_SECRET_ACCESS_KEY" >> $file
 
   deploy-infra: &deploy-infra
     run:
@@ -70,10 +70,10 @@ workflows:
           filters:
             branches:
               only:
-                - dev
+                - dev-dont-run
     jobs:
       - deployInfra:
-          context: xerris-dev-2
+          context: dev
 
   TriggerdevDestroy:
     triggers:
@@ -82,10 +82,10 @@ workflows:
           filters:
             branches:
               only:
-                - dev
+                - dev-dont-run
     jobs:
       - destroyInfra:
-          context: xerris-dev-2
+          context: dev-destroy
 
   TriggerStageDeploy:
     triggers:
@@ -94,10 +94,10 @@ workflows:
           filters:
             branches:
               only:
-                - main
+                - stage-dont-run
     jobs:
       - deployInfra:
-          context: xerris-staging-2
+          context: stage
 
   TriggerStageDestroy:
     triggers:
@@ -106,7 +106,7 @@ workflows:
           filters:
             branches:
               only:
-                - main
+                - stage-destroy
     jobs:
       - destroyInfra:
           context: xerris-staging-2
